@@ -1,0 +1,103 @@
+*
+{
+    margin:0;
+    padding:0;
+}
+
+body
+{
+    background: linear-gradient(#007bb2, #0d1423 100%);
+}
+
+.header
+{
+    background-color:rgb(0, 0, 0);
+    padding: 10px;
+    color: white;
+}
+
+.slider img
+{
+    width: 100%;
+}
+
+.informacio
+{
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.informacio .detalls
+{
+    width: 30%;
+    margin-right: 300px;
+    padding-left: 50px;
+}
+
+.informacio .detalls h1
+{
+    color:aqua;
+    font-size: 100px;
+    margin:0px;
+}
+
+.informacio .detalls h3
+{
+    color:aqua;
+    font-size: 40px;
+    margin: 0px;
+}
+
+.informacio .detalls .valoracio
+{
+    display: flex;
+    align-items: center;
+    padding-top: 20px;
+    margin-bottom: 20px;
+}
+
+.informacio .detalls .valoracio .estrelles
+{
+    color:rgb(195, 195, 0);
+    font-size: 30px;
+}
+
+.informacio .detalls .valoracio span
+{
+    font-size: 30px;
+    color: white;
+}
+
+.informacio .detalls span
+{
+    font-size: 30px;
+    color:white;
+}
+
+.informacio .detalls .descripcio
+{
+    margin-top: 50px;
+    font-size: 17px;
+}
+
+.informacio .portada
+{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding-top: 100px;
+    padding-bottom: 100px;
+}
+
+.informacio .portada img
+{
+    width: 400px;
+}
+
+.footer
+{
+    background-color:rgb(0, 0, 0);
+    padding: 10px;
+    color: white;
+}
