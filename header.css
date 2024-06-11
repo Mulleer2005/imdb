@@ -12,5 +12,11 @@
     color: white;
     background: rgb(31, 97, 141);
     border-radius: 6px;
-    font-size: 20px;
+    font-size: 40px;
+}
+
+@media screen and (min-width: 1200px) {
+    .header span {
+        font-size: 20px;
+    }
 }
