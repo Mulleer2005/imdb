@@ -1,0 +1,22 @@
+.header
+{
+    background-color:rgb(0, 0, 0);
+    padding: 10px;
+    margin-bottom: 30px;
+}
+
+.header span
+{
+    padding: 7px 10px;
+    margin-left: 30px;
+    color: white;
+    background: rgb(31, 97, 141);
+    border-radius: 6px;
+    font-size: 40px;
+}
+
+@media screen and (min-width: 1200px) {
+    .header span {
+        font-size: 20px;
+    }
+}
