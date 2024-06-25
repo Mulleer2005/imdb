@@ -1,0 +1,19 @@
+@import './css/header.css';
+@import './css/card.css';
+@import './css/footer.css';
+
+*
+{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'PT Sans', sans-serif;
+}
+
+body
+{
+    background: linear-gradient(#007bb2, #0d1423 100%);
+    background-color: black;
+    background-repeat: no-repeat;
+    height: 100%;
+}

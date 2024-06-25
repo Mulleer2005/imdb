@@ -24,13 +24,14 @@ body
 .films__card
 {
     position: relative;
-    width: 500px;
-    height: 680px;
+    width:90%;
+    max-width: 400px;
+    height: 500px;
     border-radius: 20px;
     overflow: hidden;
     box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
     margin-bottom: 50px;
-    margin-right: 70px;
+    margin-right: 10px;
 }
 
 .films__card .card__poster
@@ -79,13 +80,14 @@ body
 
 .films__card .card__details .details--logo
 {
+    width: 80%;
     max-width: 400px;
-    margin-bottom: 30px;
+    margin-bottom: 10px;
 }
 
 .films__card .card__details h3
 {
-    font-size: 30px;
+    font-size: 20px;
     color: white;
 }
 
@@ -98,20 +100,20 @@ body
 .films__card .card__details .details__assessment .assessment--stars
 {
     color: yellow;
-    font-size: 40px;
+    font-size: 20px;
 }
 
 .films__card .card__details .details__assessment span
 {
     color: white;
-    font-size: 35px;
+    font-size: 20px;
 }
 
 .films__card .card__details .details__tags
 {
     position: relative;
     margin-top: 5px;
-    font-size: 30px;
+    font-size: 20px;
 }
 
 .films__card .card__details .details__tags span
@@ -142,6 +144,7 @@ body
     .films__card {
         width: 320px;
         height: 450px;
+        margin-right: 50px;
     }
 
     .films__card .card__details .details--logo {
