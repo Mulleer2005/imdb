@@ -50,12 +50,11 @@ foreach ($genres as $tag) {
     $stmt->execute([$name_tag]);
 }
 
-
 $jsonData = file_get_contents('movies.json');
 
 $movies = json_decode($jsonData, true);
 
-$stmt = $connection->prepare("INSERT INTO movie (title, assessment, description) VALUES (?, ?, ?)");
+$stmt = $connection->prepare("INSERT INTO movie (title, assessment,  description, cover) VALUES (?, ?, ?, ?)");
 $stmt2 = $connection->prepare("SELECT id FROM director WHERE name = ?");
 $stmt3 = $connection->prepare("INSERT INTO movie_director (id_movie, id_director) VALUES (?, ?)");
 $stmt4 = $connection->prepare("SELECT id FROM tag WHERE name_tag = ?");
@@ -67,7 +66,8 @@ foreach ($movies as $movie) {
     $title = $movie['title'];
     $description = $movie['description'];
     $assessment = $movie['score'];
-    $stmt->execute([$title, $assessment, $description]);
+    $cover = $movie['cover'];
+    $stmt->execute([$title, $assessment, $description, $cover]);
 
     $last_id = $connection->lastInsertId();
 

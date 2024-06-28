@@ -11,25 +11,28 @@
     </div>
 
     <div class="films">
-        <div class="films__card">
-            <div class="card__poster card__poster--blue">
-                <img src="../imatges/poster.jpg">
-            </div>
-            <div class ="card__details">
-                <img src="../imatges/lletres.png" class="details--logo">
-                <h3>Dirigida per James Cameron</h3>
-                <div class="details__assessment">
-                    <span class="assessment--stars">★★★★☆</span>
-                    <span>4/5</span>
+        <?php
+            foreach ($moviesList as $movie) :
+        ?>
+            <div class="films__card">
+                <div class="card__poster card__poster--blue">
+                    <img src="<?php echo ($movie->getCover()); ?>">
                 </div>
-                <div class="details__tags">
-                    <span>Ciència ficció</span>
-                    <span class="tags--action">Acció</span>
+                <div class ="card__details">
+                    <h1><?php echo ($movie->getTitle()); ?></h1>
+                    <h3>Dirigida per <?php echo(implode(", ", $movie->getDirector())); ?></h3>
+                    <div class="details__assessment">
+                        <span>Valoració: <?php echo ($movie->getAssessment()); ?>/10</span>
+                    </div>
+                    <div class="details__tags">
+                        <span><?php echo (implode(", ", $movie->getTags())); ?></span>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <div class="films__card">
+        <?php endforeach?>
+
+        <!-- <div class="films__card">
             <div class="card__poster card__poster--orange">
                 <img src="../imatges/godzilla.jpeg">
             </div>
@@ -46,7 +49,7 @@
                     <span class="tags--adventure">Aventura</span>
                 </div>
             </div>
-        </div>
+        </div> -->
     </div>
 
     <footer class="footer">
