@@ -1,0 +1,298 @@
+*
+{
+    margin:0;
+    padding:0;
+}
+
+body
+{
+    background: linear-gradient(#007bb2, #0d1423 100%);
+    background-color: black;
+}
+
+.body--color
+{
+    background: linear-gradient(#c34b17, #3a2413 100%);
+    background-color: black;
+}
+
+.header
+{
+    background-color:rgb(0, 0, 0);
+    padding: 10px;
+    color: white;
+}
+
+.slider-container{
+    max-width: 100%;
+    max-height: 150px;
+    overflow: hidden;
+    position: relative;
+    background-image: black;
+}
+
+.slider .slider__img
+{
+    min-width:  375px;
+    min-height: 150px;
+    overflow: hidden;
+}
+
+.slider-container .slider-controls
+{
+    width: 100%;
+    height: 100%;
+}
+
+.slider-container .slider__back
+{
+    position:absolute;
+    top:50%;
+    left: 5%;
+    color: black;
+    font-weight:900;
+    font-size: 20px;
+}
+
+.slider-container .slider__next
+{
+    position:absolute;
+    top:50%;
+    right: 5%;
+    color: black;
+    font-weight:900;
+    font-size: 20px;
+}
+
+#lightgallery
+{
+    width: 100%;
+    margin-top: 50px;
+    padding-top: 10px;
+    padding-bottom: 20px;
+}
+
+#lightgallery img
+{
+    width: 350px;
+    margin-left: 15px;
+    margin-top: 10px;
+}
+
+.lg-actions .lg-next:before {
+    content: "⮕" !important;
+}
+
+.lg-actions .lg-prev:after {
+    content: "⬅" !important;
+}
+
+.lg-toolbar .lg-close:after {
+    content: "╳" !important;
+}
+
+.lg-toolbar .lg-download:after {
+    display: none !important;
+}
+
+.information
+{
+    margin-top: 30px;
+    width: 100%;
+}
+
+.information .information__details
+{
+    width: 350px;
+    margin-right: 300px;
+    padding-left: 15px;
+}
+
+.information .information__details h1
+{
+    color:aqua;
+    font-size: 70px;
+    margin:0px;
+}
+
+.information .details--color h1
+{
+    color: rgb(184, 182, 182);
+    font-size: 34px;
+}
+
+.information .information__details h3
+{
+    color:aqua;
+    font-size: 30px;
+    margin: 0px;
+}
+
+.information .information__details .details__assessment
+{
+    display: flex;
+    align-items: center;
+    padding-top: 10px;
+    margin-bottom: 10px;
+}
+
+.information .information__details .details__assessment .assessment--stars
+{
+    color:rgb(195, 195, 0);
+    font-size: 20px;
+}
+
+.information .information__details .details__assessment span
+{
+    font-size: 20px;
+    color: white;
+}
+
+.information .information__details span
+{
+    font-size: 26px;
+    color:white;
+}
+
+.information .information__details .details--description
+{
+    margin-top: 50px;
+    font-size: 15px;
+    line-height: 25px;
+}
+
+.information .details__cover
+{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding-top: 60px;
+    padding-bottom: 30px;
+}
+
+.information .details__cover img
+{
+    width: 250px;
+}
+
+.footer
+{
+    background-color:rgb(0, 0, 0);
+    padding: 10px;
+    color: white;
+}
+
+@media screen and (min-width: 1200px) {
+    .information .information__details h1
+    {
+        font-size: 100px;
+    }
+
+    .information .details--color h1
+    {
+        color: rgb(184, 182, 182);
+        font-size: 70px;
+    }
+
+    .information .information__details h3
+    {
+        font-size: 40px;
+    }
+
+    .information .information__details
+    {
+        padding-left: 50px;
+        width: 30%;
+    }
+
+    .information
+    {
+        display: flex;
+        align-items: center;
+    }
+
+    .information .information__details .details__assessment
+    {
+        padding-top: 20px;
+        margin-bottom: 20px;
+    }
+
+    .information .information__details .details__assessment .assessment--stars
+    {
+        font-size: 30px;
+    }
+
+    .information .information__details .details__assessment span
+    {
+        font-size: 30px;
+    }
+
+    .information .information__details span
+    {
+        font-size: 30px;
+    }
+
+    .information .information__details .details--description
+    {
+        font-size: 17px;
+    }
+
+    .information .details__cover
+    {
+        padding-top: 100px;
+        padding-bottom: 100px;
+    }
+
+    .information .details__cover img
+    {
+        width: 400px;
+    }
+
+    .slider .slider__img
+    {
+        min-width:  375px;
+        min-height: 550px;
+    }
+
+    .slider .slider__img-footer
+    {
+        padding: 40px;
+    }
+
+    .slider-container
+    {
+        max-width: 100%;
+        max-height: 550px;
+        overflow: hidden;
+    }
+
+    .continer-footer
+    {
+        max-height: 300px;
+        margin-bottom: 60px;
+    }
+
+    .slider-container .slider-buttons
+    {
+        width: 60px;
+        height: 60px;
+    }
+
+    .information
+    {
+        margin-top: 0px;
+    }
+
+    #lightgallery
+    {
+        display:flex;
+        place-items: center;
+    }
+
+    #lightgallery img
+    {
+        width: 400px;
+        padding-left: 20%;
+        margin-right: 30px;
+    }
+}
