@@ -1,12 +1,7 @@
 <?php
 
-$server = "127.0.0.1";
-$user = "root";
-$pass = "";
-$db = "imdb";
-$dsn = "mysql:host=$server;dbname=$db;charset=utf8";
+require '../back/connection.php';
 
-$connection = new PDO($dsn, $user, $pass);
 
 $stmt = $connection->prepare("set FOREIGN_KEY_CHECKS = 0; truncate movie_tag");
 $stmt->execute();
@@ -14,27 +9,27 @@ $stmt->execute();
 $stmt = $connection->prepare("truncate movie_director");
 $stmt->execute();
 
-$stmt = $connection->prepare("truncate movie");
+$stmt = $connection->prepare("truncate movies");
 $stmt->execute();
 
-$stmt = $connection->prepare("truncate director");
+$stmt = $connection->prepare("truncate directors");
 $stmt->execute();
 
-$stmt = $connection->prepare("truncate tag; set FOREIGN_KEY_CHECKS = 1");
+$stmt = $connection->prepare("truncate tags; set FOREIGN_KEY_CHECKS = 1");
 $stmt->execute();
 
 $jsonData = file_get_contents('directors.json');
 
 $directors = json_decode($jsonData, true);
 
-$stmt = $connection->prepare("INSERT INTO director (name, birth_date) VALUES (?, ?)");
+$stmt = $connection->prepare("INSERT INTO directors (name, birthdate) VALUES (?, ?)");
 
 
 
 foreach ($directors as $director) {
     $name = $director['name'];
-    $birth_date = $director['birthdate'];
-    $stmt->execute([$name, $birth_date]);
+    $birthdate = $director['birthdate'];
+    $stmt->execute([$name, $birthdate]);
 }
 
 
@@ -42,23 +37,23 @@ $jsonData = file_get_contents('genres.json');
 
 $genres = json_decode($jsonData, true);
 
-$stmt = $connection->prepare("INSERT INTO tag (name_tag) VALUES (?)");
+$stmt = $connection->prepare("INSERT INTO tags (name) VALUES (?)");
 
 
 foreach ($genres as $tag) {
-    $name_tag = $tag['name'];
-    $stmt->execute([$name_tag]);
+    $name = $tag['name'];
+    $stmt->execute([$name]);
 }
 
 $jsonData = file_get_contents('movies.json');
 
 $movies = json_decode($jsonData, true);
 
-$stmt = $connection->prepare("INSERT INTO movie (title, assessment,  description, cover) VALUES (?, ?, ?, ?)");
-$stmt2 = $connection->prepare("SELECT id FROM director WHERE name = ?");
-$stmt3 = $connection->prepare("INSERT INTO movie_director (id_movie, id_director) VALUES (?, ?)");
-$stmt4 = $connection->prepare("SELECT id FROM tag WHERE name_tag = ?");
-$stmt5 = $connection->prepare("INSERT INTO movie_tag (id_movie, id_tag) VALUES (?, ?)");
+$stmt = $connection->prepare("INSERT INTO movies (title, assessment,  description, cover) VALUES (?, ?, ?, ?)");
+$stmt2 = $connection->prepare("SELECT id FROM directors WHERE name = ?");
+$stmt3 = $connection->prepare("INSERT INTO movie_director (movie_id, director_id) VALUES (?, ?)");
+$stmt4 = $connection->prepare("SELECT id FROM tags WHERE name = ?");
+$stmt5 = $connection->prepare("INSERT INTO movie_tag (movie_id, tag_id) VALUES (?, ?)");
 
 
 

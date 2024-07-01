@@ -1,11 +1,11 @@
 <?php
-require 'back/movie.php';
+require '../back/movie.php';
 
-require 'back/director.php';
+require '../back/director.php';
 
-require 'back/connection.php';
+require '../back/connection.php';
 
-$stmt = $connection->prepare("SELECT id, title, cover, assessment, description  FROM movie");
+$stmt = $connection->prepare("SELECT id, title, cover, assessment, description  FROM movies");
 
 $stmt->execute();
 
@@ -14,35 +14,38 @@ $movies = $stmt->fetchAll();
 $moviesList = [];
 
 foreach ($movies as $movie) {
-    $stmt2 = $connection->prepare("SELECT id_tag FROM movie_tag WHERE id_movie = ?");
+    $stmt2 = $connection->prepare("SELECT name
+    FROM tags
+    INNER JOIN movie_tag
+    ON tags.id = movie_tag.tag_id
+    WHERE movie_id = ?;");
+    
     $stmt2->execute([$movie['id']]);
-    $tagsID = $stmt2->fetchAll();
+    $tagsList = $stmt2->fetchAll(PDO::FETCH_ASSOC);
 
     $tagsName = [];
-    foreach ($tagsID as $tag){
-        $stmt3 = $connection->prepare("SELECT name_tag FROM tag WHERE id = ?");
-        $stmt3->execute([$tag['id_tag']]);
-        $tagName = $stmt3->fetch();
-        if($tagName){
-            $tagsName[] = $tagName['name_tag'];
+    foreach($tagsList as $tags){
+        foreach($tags as $tag){
+            $tagsName[] = $tag;
         }
     }
 
-    $stmt4 = $connection->prepare("SELECT id_director FROM movie_director WHERE id_movie = ?");
+    $stmt4 = $connection->prepare("SELECT name
+    FROM directors
+    INNER JOIN movie_director
+    ON directors.id = movie_director.director_id
+    WHERE movie_id = ?;");
     $stmt4->execute([$movie['id']]);
-    $directorsID = $stmt4->fetchAll();
-
+    $directorsList = $stmt4->fetchAll(PDO::FETCH_ASSOC);
+    
     $directorsName = [];
-    foreach ($directorsID as $director){
-        $stmt5 = $connection->prepare("SELECT name FROM director WHERE id = ?");
-        $stmt5->execute([$director['id_director']]);
-        $directorName = $stmt5->fetch();
-        if($directorName){
-            $directorsName[] = $directorName['name'];
+    foreach($directorsList as $directors){
+        foreach($directors as $director){
+            $directorsName[] = $director;
         }
     }
-    $moviesList[] = new Movie($movie['title'], $movie['cover'], $movie['assessment'], $tagsName, $movie['description'], $directorsName);
 
+    $moviesList[] = new Movie($movie['title'], $movie['cover'], $movie['assessment'], $tagsName, $movie['description'], $directorsName);
 }
 
-require 'views/home.view.php';
+require '../views/home.view.php';
