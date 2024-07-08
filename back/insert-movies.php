@@ -1,88 +1,122 @@
 <?php
+session_start();
 
-require '../back/connection.php';
-
-
-$stmt = $connection->prepare("set FOREIGN_KEY_CHECKS = 0; truncate movie_tag");
-$stmt->execute();
-
-$stmt = $connection->prepare("truncate movie_director");
-$stmt->execute();
-
-$stmt = $connection->prepare("truncate movies");
-$stmt->execute();
-
-$stmt = $connection->prepare("truncate directors");
-$stmt->execute();
-
-$stmt = $connection->prepare("truncate tags; set FOREIGN_KEY_CHECKS = 1");
-$stmt->execute();
-
-$jsonData = file_get_contents('directors.json');
-
-$directors = json_decode($jsonData, true);
-
-$stmt = $connection->prepare("INSERT INTO directors (name, birthdate) VALUES (?, ?)");
+$titol = $_POST['titol'];
+$resum = $_POST['resum'];
+$portada = $_POST['portada'];
+$tags = $_POST['tags'];
+$directors = $_POST['directors'];
+$valoracio = $_POST['valoracio'];
 
 
+require 'connection.php';
 
-foreach ($directors as $director) {
-    $name = $director['name'];
-    $birthdate = $director['birthdate'];
-    $stmt->execute([$name, $birthdate]);
-}
+$pucFer = true;
+$_SESSION['errors_bag'] = [];
 
+if (is_numeric($titol)){
+    $pucFer = false;
+    $_SESSION['errors_bag'][] = "El titol ha de ser un string";}
 
-$jsonData = file_get_contents('genres.json');
+if (is_numeric($resum)){
+    $pucFer = false;
+    $_SESSION['errors_bag'][] = "El resum ha de ser un string";}
 
-$genres = json_decode($jsonData, true);
+if (is_numeric($portada)){
+    $pucFer = false;
+    $_SESSION['errors_bag'][] = "La portdada ha de ser un string";}
 
-$stmt = $connection->prepare("INSERT INTO tags (name) VALUES (?)");
+if (is_numeric($tags)){
+    $pucFer = false;
+    $_SESSION['errors_bag'][] = "Els tags han de ser un string";}
 
+if (is_numeric($directors)){
+    $pucFer = false;
+    $_SESSION['errors_bag'][] = "Els directors han de ser un string";}
 
-foreach ($genres as $tag) {
-    $name = $tag['name'];
-    $stmt->execute([$name]);
-}
+if (!is_numeric($valoracio)){
+    $pucFer = false;
+    $_SESSION['errors_bag'][] = "La valoració ha de ser un número enter";}
 
-$jsonData = file_get_contents('movies.json');
+if (empty($titol)){
+    $pucFer = false;
+    $_SESSION['errors_bag'][] = "El titol no pot ser buit";}
 
-$movies = json_decode($jsonData, true);
+if (empty($resum)){
+    $pucFer = false;
+    $_SESSION['errors_bag'][] = "El resum no pot ser buit";}
 
-$stmt = $connection->prepare("INSERT INTO movies (title, assessment,  description, cover) VALUES (?, ?, ?, ?)");
+if (empty($portada)){
+    $pucFer = false;
+    $_SESSION['errors_bag'][] = "La portada no pot ser buida";}
+
+if (empty($valoracio)){
+    $pucFer = false;
+    $_SESSION['errors_bag'][] = "La valoració no pot ser buida";}
+
+if ($valoracio < 0 || $valoracio > 10){
+    $pucFer = false;
+    $_SESSION['errors_bag'][] = "La valoració ha d'estar entre 1 i 10";}
+
+if($pucFer){
+$stmt = $connection->prepare("INSERT INTO movies (title, cover, assessment, description) VALUES (?,?,?,?)");
+$stmt->execute([$titol, $portada, $valoracio, $resum]);
+
+$stmt = $connection->prepare("SELECT id FROM movies WHERE title = ?");
+$stmt->execute([$titol]);
+
+$idMovie = $stmt->fetch(PDO::FETCH_ASSOC);
+
 $stmt2 = $connection->prepare("SELECT id FROM directors WHERE name = ?");
-$stmt3 = $connection->prepare("INSERT INTO movie_director (movie_id, director_id) VALUES (?, ?)");
-$stmt4 = $connection->prepare("SELECT id FROM tags WHERE name = ?");
-$stmt5 = $connection->prepare("INSERT INTO movie_tag (movie_id, tag_id) VALUES (?, ?)");
 
 
-
-foreach ($movies as $movie) {
-    $title = $movie['title'];
-    $description = $movie['description'];
-    $assessment = $movie['score'];
-    $cover = $movie['cover'];
-    $stmt->execute([$title, $assessment, $description, $cover]);
-
-    $last_id = $connection->lastInsertId();
-
-    $director = $movie['director'];
+$directorsList = [];
+foreach($directors as $director){
 
     $stmt2->execute([$director]);
 
-    $directors = $stmt2->fetchAll();
+    $directorsList[] = $stmt2->fetchAll(PDO::FETCH_ASSOC);
 
-    $stmt3->execute([$last_id, $directors[0]['id']]);
+}
 
-    $tags = $movie['genres'];
+$stmt3 = $connection->prepare("INSERT INTO movie_director (movie_id, director_id) VALUES (?,?)");
 
-    foreach($tags as $reg){
-        $arrayID = array($reg);
-        foreach($arrayID as $ids){
-            $stmt4->execute([$ids]);
-            $tags = $stmt4->fetchAll();
-            $stmt5->execute([$last_id, $tags[0]['id']]);
+foreach($directorsList as $director){
+    foreach($director as $i){
+        foreach($i as $reg){
+            foreach($idMovie as $id){
+                $stmt3->execute([$id, $reg]);
+            }
         }
     }
 }
+
+
+$stmt2 = $connection->prepare("SELECT id FROM tags WHERE name = ?");
+
+
+$tagsList = [];
+foreach($tags as $tag){
+
+    $stmt2->execute([$tag]);
+
+    $tagsList[] = $stmt2->fetchAll(PDO::FETCH_ASSOC);
+
+}
+
+$stmt3 = $connection->prepare("INSERT INTO movie_tag (movie_id, tag_id) VALUES (?,?)");
+
+foreach($tagsList as $tag){
+    foreach($tag as $i){
+        foreach($i as $reg){
+            foreach($idMovie as $id){
+                $stmt3->execute([$id, $reg]);
+            }
+        }
+    }
+}
+}
+
+header("Location: http://imdb.test/home/formulari-crear");
+
 ?>

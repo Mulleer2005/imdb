@@ -3,20 +3,6 @@ body {
     background-color: #f4f4f4;
 }
 
-.errors {
-    margin: auto;
-    text-align: center;
-    padding: 10px;
-    background-color: rgb(255, 102, 102);
-    border: 1px solid #ff0000;
-    border-radius: 8x;
-    width: 30%;
-}
-
-.errors--error {
-    padding: 10px;
-}
-
 .container {
     margin: auto;
     background: white;

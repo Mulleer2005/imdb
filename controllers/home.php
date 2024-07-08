@@ -1,9 +1,9 @@
 <?php
-require '../back/movie.php';
+require __DIR__.'/../back/movie.php';
 
-require '../back/director.php';
+require __DIR__.'/../back/director.php';
 
-require '../back/connection.php';
+require __DIR__.'/../back/connection.php';
 
 $stmt = $connection->prepare("SELECT id, title, cover, assessment, description  FROM movies");
 
@@ -48,4 +48,4 @@ foreach ($movies as $movie) {
     $moviesList[] = new Movie($movie['title'], $movie['cover'], $movie['assessment'], $tagsName, $movie['description'], $directorsName);
 }
 
-require '../views/home.view.php';
+require __DIR__.'/../views/home.view.php';
