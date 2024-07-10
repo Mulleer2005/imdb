@@ -1,4 +1,4 @@
-<?php session_start(); ?>
+<?php require 'back/connection.php'; ?>
 <!DOCTYPE html>
 <html lang="ca">
 <head>
@@ -12,18 +12,12 @@
         <h3>Header</h3>
     </div>
 
-    <?php foreach ($_SESSION['errors_bag'] as $error) : ?>       
-        <div class="errors">
-            <span class="errors--error"> <?php echo $error; ?></span>
-        </div>
-    <?php endforeach?>
-
     <div class="container">
         <h1>Formulari modificar pel·lícula</h1>
-        <form name="formulari" method="post" action="/store/update/movie">
+        <form id="form" name="formulari" method="post" action="/store/update/movie">
         <div class="form-part">
-                <label for="titol">Pel·lícula a modificar</label><br><br>
-                <select name="id" size="5">
+                <label for="titolAntic">Pel·lícula a modificar</label><br><br>
+                <select id="titolAntic" name="id" size="5">
                 <?php
                 require 'back/connection.php';
 
@@ -38,22 +32,20 @@
             </div>
             <div class="form-part">
                 <label for="titol">Nou títol</label>
-                <input type="text" name="titol">
+                <input id="titol" type="text" name="titol">
             </div>
             <div class="form-part">
                 <label for="resum">Nou resum</label>
-                <input type="text" name="resum"></input>
+                <input id="resum" type="text" name="resum"></input>
             </div>
             <div class="form-part">
                 <label for="portada">Nova ruta de la portada</label>
-                <input type="text" name="portada">
+                <input id="portada" type="text" name="portada">
             </div>
             <div class="form-part">
                 <label for="tags">Nous tags</label><br><br>
-                <select multiple name="tagsIDs[]" size="10">
+                <select id="tags" multiple name="tagsIDs[]" size="10">
                 <?php
-                require 'back/connection.php';
-
                 $stmt = $connection->prepare("SELECT id, name FROM tags");
                 $stmt->execute();
                 $tags = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -65,10 +57,8 @@
             </div>
             <div class="form-part">
                 <label for="director">Nous directors</label><br><br>
-                <select multiple name="directorsIDs[]" size="8">
+                <select id="director" multiple name="directorsIDs[]" size="8">
                 <?php
-                require 'back/connection.php';
-
                 $stmt = $connection->prepare("SELECT id, name FROM directors");
                 $stmt->execute();
                 $directors = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -80,14 +70,70 @@
             </div>
             <div class="form-part">
                 <label for="valoracio">Nova valoració 0 - 10</label>
-                <input type="number" name="valoracio" min="0" max="10" step="1">
+                <input id="valoracio" type="number" name="valoracio" min="0" max="10" step="1">
             </div>
             <button>Modificar pel·lícula</button>
         </form>
     </div>
-
+    <div id="resposta"></div>
     <div class="footer">
         <h3>Footer</h3>
     </div>
+
+    <script>
+        document.getElementById('form').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            var textSeleccionat1 = document.getElementById('titolAntic').value;
+            var textSeleccionat2 = document.getElementById('titol').value;
+            var textSeleccionat3 = document.getElementById('resum').value;
+            var textSeleccionat4 = document.getElementById('portada').value;
+
+            var valorsSeleccionats5 = [];
+            var opcionsSeleccionades5 = document.getElementById('tags').selectedOptions;
+            for (var i = 0; i < opcionsSeleccionades5.length; i++) {
+                valorsSeleccionats5.push(opcionsSeleccionades5[i].value);
+            }
+
+            var valorsSeleccionats6 = [];
+            var opcionsSeleccionades6 = document.getElementById('director').selectedOptions;
+            for (var i = 0; i < opcionsSeleccionades6.length; i++) {
+                valorsSeleccionats6.push(opcionsSeleccionades6[i].value);
+            }
+
+            var textSeleccionat7 = document.getElementById('valoracio').value;
+
+
+            var formData = {
+                titolAntic: textSeleccionat1,
+                titol: textSeleccionat2,
+                resum: textSeleccionat3,
+                portada: textSeleccionat4,
+                tags: valorsSeleccionats5,
+                director: valorsSeleccionats6,
+                valoracio: textSeleccionat7
+            };
+
+            fetch('http://imdb.test/store/update/movie', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formData)
+            })
+            .then(resposta => resposta.json())
+            .then(data => {
+                document.getElementById('resposta').innerHTML = '';
+                for (var camp in data.missatges) {
+                    var elementMissatge = document.createElement('p');
+                    elementMissatge.textContent = data.missatges[camp];
+                    if (data.isValid) {
+                        elementMissatge.style.color = 'green';
+                    } else {
+                        elementMissatge.style.color = 'red';
+                    }
+                    document.getElementById('resposta').appendChild(elementMissatge);
+                }
+            })
+        });
+    </script>
 </body>
 </html>

@@ -1,31 +1,35 @@
 <?php
-session_start();
-
-$director = $_POST['director'];
-$dataNaixe = $_POST['birthday'];
-
 require 'connection.php';
 
-$pucFer = true;
-$_SESSION['errors_bag'] = [];
 
+header('Content-Type: application/json');
 
-if (is_numeric($director)) {
-    $pucFer = false;
-    $_SESSION['errors_bag'][] = "El director ha de ser un string";
+$input = json_decode(file_get_contents('php://input'), true);
+
+$missatges = [];
+$isValid = true;
+
+if (!isset($input['name']) && is_numeric($input['name'])) {
+    $missatges['name'] = 'El primer camp no és una cadena valida.';
+    $isValid = false;
 }
 
-if (empty($director)) {
-    $pucFer = false;
-    $_SESSION['errors_bag'][] = "El director no pot ser buit";
+if (!isset($input['birthdate'])) {
+    $missatges['birthdate'] = 'El segon camp no és una cadena valida.';
+    $isValid = false;
 }
 
-
-if ($pucFer) {
+if($isValid){
     $stmt = $connection->prepare("INSERT INTO directors (name, birthdate) VALUES (?,?)");
-    $stmt->execute([$director, $dataNaixe]);
+    $stmt->execute([$input['name'], $input['birthdate']]);
+    $missatges['verificacio'] = 'Tots el camps son vàlids.';
 }
 
-header("Location: http://imdb.test/home/formulari-crear-directors");
+$resposta = [
+    'isValid' => $isValid,
+    'missatges' => $missatges
+];
+
+echo json_encode($resposta);
 
 ?>

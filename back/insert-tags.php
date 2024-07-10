@@ -1,29 +1,33 @@
 <?php
-session_start();
-
-$tag = $_POST['tag'];
-
 require 'connection.php';
+header('Content-Type: application/json');
 
-$pucFer = true;
-$_SESSION['errors_bag'] = [];
+$input = json_decode(file_get_contents('php://input'), true);
 
-if (is_numeric($tag)) {
-    $pucFer = false;
-    $_SESSION['errors_bag'][] = "El tag ha de ser un string";
+$message = '';
+
+$isValid = true;
+
+if (isset($input['tag'])) {
+    if (is_numeric($input['tag'])) {
+        $message = 'El camp no és un string valid.';
+        $isValid = false;
+    }
+} else {
+    $message = 'El camp no sha enviat.';
 }
 
-if (empty($director)) {
-    $pucFer = false;
-    $_SESSION['errors_bag'][] = "El tag no pot ser buit";
-}
-
-if($pucFer){
-   
+if($isValid){
     $stmt = $connection->prepare("INSERT INTO tags (name) VALUES (?)");
-    $stmt->execute([$tag]);
+    $stmt->execute([$input['tag']]);
+    $message = 'El camp és vàlid';
 }
 
-header("Location: http://imdb.test/home/formulari-crear-tags");
+$response = [
+    'isValid' => $isValid,
+    'message' => $message
+];
+
+echo json_encode($response);
 
 ?>

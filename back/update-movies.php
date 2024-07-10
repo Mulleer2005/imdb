@@ -1,106 +1,113 @@
 <?php
-session_start();
-
-$id = $_POST['id'];
-$titol = $_POST['titol'];
-$resum = $_POST['resum'];
-$portada = $_POST['portada'];
-if(isset($_POST['tagsIDs'])){
-    $tags = $_POST['tagsIDs'];
-}
-if(isset($_POST['directorsIDs'])){
-    $directors = $_POST['directorsIDs'];
-}
-$valoracio = $_POST['valoracio'];
-
 require 'connection.php';
 
-$pucFer = true;
-$_SESSION['errors_bag'] = [];
+header('Content-Type: application/json');
 
-if (is_numeric($titol)){
-    $pucFer = false;
-    $_SESSION['errors_bag'][] = "El titol ha de ser un string";
+$input = json_decode(file_get_contents('php://input'), true);
+
+$missatges = [];
+$isValid = true;
+
+
+if (!isset($input['titolAntic'])) {
+    $missatges['titolAntic'] = 'El titol de la pelicula a modificar no és una cadena vàlida.';
+    $isValid = false;
 }
 
-if (is_numeric($resum)){
-    $pucFer = false;
-    $_SESSION['errors_bag'][] = "El resum ha de ser un string";
+if(isset($input['titol'])){
+
+if (is_numeric($input['titol'])) {
+    $missatges['titol'] = 'El nou titol no és una cadena vàlida.';
+    $isValid = false;
+}
 }
 
-if (is_numeric($portada)){
-    $pucFer = false;
-    $_SESSION['errors_bag'][] = "La portada ha de ser un string";
+if(isset($input['resum'])){
+
+if (is_numeric($input['resum'])) {
+    $missatges['resum'] = 'El resum no és una cadena vàlida.';
+    $isValid = false;
+}
+}
+if(isset($input['portada'])){
+
+if (is_numeric($input['portada'])) {
+    $missatges['portada'] = 'La portada no és una cadena vàlida.';
+    $isValid = false;
+}
+}
+if(isset($input['tags'])){
+
+if (!is_array($input['tags'])) {
+    $missatges['tags'] = 'El selector de tags no és una cadena vàlida.';
+    $isValid = false;
+}
+}
+if(isset($input['director'])){
+
+if (!is_array($input['director'])) {
+    $missatges['director'] = 'El selector de directors no és una cadena vàlida.';
+    $isValid = false;
+}
 }
 
-if (is_numeric($valoracio)){
-    $pucFer = false;
-    $_SESSION['errors_bag'][] = "La valoració ha de ser un string";
-}
 
-if (empty($id)){
-    $pucFer = false;
-    $_SESSION['errors_bag'][] = "El titol de la peli a modificar no pot estar buit";
-}
-
-
-
-if (!empty($titol) || $pucFer){    
+if($isValid){
+    if(isset($input['titol'])){
     $stmt = $connection->prepare("UPDATE movies
     SET title = ?
     WHERE id = ?");
 
-    $stmt->execute([$titol, $id]);
-}
-if(!empty($resum) || $pucFer){
+    $stmt->execute([$input['titol'], $input['titolAntic']]);
+    }
+
+    if(isset($input['resum'])){
+
     $stmt = $connection->prepare("UPDATE movies
     SET description = ?
     WHERE id = ?");
 
-    $stmt->execute([$resum, $id]);
-}
-if(!empty($portada) || $pucFer){
+    $stmt->execute([$input['resum'], $input['titolAntic']]);
+
+    }
+    if(isset($input['portada'])){
+
     $stmt = $connection->prepare("UPDATE movies
     SET cover = ?
     WHERE id = ?");
 
-    $stmt->execute([$portada, $id]);
-}
-if(isset($tags) || $pucFer){
+    $stmt->execute([$input['portada'], $input['titolAntic']]);
+    }
+
+    if(isset($input['tags'])){
 
     $stmt = $connection->prepare("DELETE FROM movie_tag WHERE movie_id = ?");
-    foreach($tags as $tag){
-        $stmt->execute([$tag]);
-    }
+    $stmt->execute([$input['titolAntic']]);
 
     $stmt = $connection->prepare("INSERT INTO movie_tag (movie_id, tag_id) VALUES (?,?)");
-    foreach($tags as $tag){
-        $stmt->execute([$id, $tag]);
+    foreach($input['tags'] as $tag){
+        $stmt->execute([$input['titol'], $tag]);
     }
-
 }
-if(isset($directors) || $pucFer){
+
+    if(isset($input['director'])){
 
     $stmt = $connection->prepare("DELETE FROM movie_director WHERE movie_id = ?");
-    foreach($directors as $director){
-        $stmt->execute([$director]);
-    }
+    $stmt->execute([$input['titolAntic']]);
 
     $stmt = $connection->prepare("INSERT INTO movie_director (movie_id, director_id) VALUES (?,?)");
-    foreach($directors as $director){
-        $stmt->execute([$id, $director]);
+    foreach($input['director'] as $director){
+        $stmt->execute([$input['titol'], $director]);
     }
-    
-
-}
-if(!empty($valoracio) || $pucFer){
-    $stmt = $connection->prepare("UPDATE movies
-    SET assessment = ?
-    WHERE id = ?");
-
-    $stmt->execute([$valoracio, $id]);
 }
 
-header("Location: http://imdb.test/home/formulari-modificar");
+    $missatges['verificacio'] = 'Tots els camps son vàlids.';
 
+}
+$resposta = [
+    'isValid' => $isValid,
+    'missatges' => $missatges
+];
+
+echo json_encode($resposta);
 ?>

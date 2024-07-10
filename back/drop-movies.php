@@ -1,52 +1,45 @@
 <?php
-session_start();
-
-$ids = $_POST['id'];
-
-
-$_SESSION["TitleArrayException"] = "El titol ha de ser un array";
-
-$_SESSION["TitleEmptyException"] = "El titol no pot estar buit";
-
-
-if (!is_array($ids)){
-    echo $_SESSION["TitleStringException"];
-}elseif (empty($ids)){
-    echo $_SESSION["TitleEmptyException"];
-}
-
-if (is_numeric($ids)) {
-    $pucFer = false;
-    $_SESSION['errors_bag'][] = "El titol ha de ser un array";
-}
-
-if (empty($ids)) {
-    $pucFer = false;
-    $_SESSION['errors_bag'][] = "El titol no pot estar buit";
-}
-
-
 require 'connection.php';
+header('Content-Type: application/json');
 
-$pucFer = true;
-$_SESSION['errors_bag'] = [];
+$input = json_decode(file_get_contents('php://input'), true);
 
-if($pucFer){
+$message = '';
+$isValid = true;
 
+if (isset($input['titol']) && is_array($input['titol'])) {
+    foreach ($input['titol'] as $value) {
+        if (!is_string($value)) {
+            $isValid = false;
+            break;
+        }
+    }
+} else {
+    $isValid = false;
+    $message = 'El camp no es un array de cadenes vàlid.';
+}
+
+if($isValid){
 $stmt = $connection->prepare("DELETE FROM movie_director WHERE movie_id = ?");
-foreach($ids as $id){
-    $stmt->execute([$id]);
+foreach($input['titol'] as $value){
+    $stmt->execute([$value]);
 }
 $stmt = $connection->prepare("DELETE FROM movie_tag WHERE movie_id = ?");
-foreach($ids as $id){
-    $stmt->execute([$id]);
+foreach($input['titol'] as $value){
+    $stmt->execute([$value]);
 }
 $stmt = $connection->prepare("DELETE FROM movies WHERE id = ?");
-foreach($ids as $id){
-    $stmt->execute([$id]);
+foreach($input['titol'] as $value){
+    $stmt->execute([$value]);
 }
+$message = 'Tots els camps son vàlids.';
 }
 
-header("Location: http://imdb.test/home/formulari-eliminar");
+$resposta = [
+    'isValid' => $isValid,
+    'message' => $isValid ? 'Todos los elementos son cadenas válidas.' : $message
+];
+
+echo json_encode($resposta);
 
 ?>

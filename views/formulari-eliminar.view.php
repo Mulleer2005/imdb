@@ -1,4 +1,4 @@
-<?php session_start(); ?>
+<?php require 'back/connection.php'; ?>
 <!DOCTYPE html>
 <html lang="ca">
 <head>
@@ -12,21 +12,13 @@
         <h3>Header</h3>
     </div>
 
-    <?php foreach ($_SESSION['errors_bag'] as $error) : ?>       
-        <div class="errors">
-            <span class="errors--error"> <?php echo $error; ?></span>
-        </div>
-    <?php endforeach?>
-
     <div class="container">
         <h1>Formulari eliminar pel·lícula</h1>
-        <form name="formulari" method="post" action="/store/drop/movie">
+        <form name="formulari" method="post" id="form">
             <div class="form-part">
                 <label for="titol">Títol</label><br><br>
-                <select multiple name="id[]" required size="5">
+                <select id= "titol" multiple name="id[]" required size="5">
                 <?php
-                require 'back/connection.php';
-
                 $stmt = $connection->prepare("SELECT id, title FROM movies");
                 $stmt->execute();
                 $movies = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -39,9 +31,40 @@
         <button>Eliminar pel·lícula</button>
         </form>
     </div>
+    <div id="resposta"><div>
 
     <div class="footer">
         <h3>Footer</h3>
     </div>
+
+    <script>
+        document.getElementById('form').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            var valorsSeleccionats = [];
+            var opcionsSeleccionades = document.getElementById('titol').selectedOptions;
+            for (var i = 0; i < opcionsSeleccionades.length; i++) {
+                valorsSeleccionats.push(opcionsSeleccionades[i].value);
+            }
+
+            var formData = {
+                titol: valorsSeleccionats
+            };
+
+            fetch('http://imdb.test/store/drop/movie', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formData)
+            })
+            .then(resposta => resposta.json())
+            .then(data => {
+                document.getElementById('resposta').textContent = data.message;
+                if (data.isValid) {
+                    document.getElementById('resposta').style.color = 'green';
+                } else {
+                    document.getElementById('resposta').style.color = 'red';
+                }
+            })});
+    </script>
 </body>
 </html>

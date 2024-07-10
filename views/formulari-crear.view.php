@@ -1,4 +1,4 @@
-<?php session_start(); ?>
+<?php require 'back/connection.php'; ?>
 <!DOCTYPE html>
 <html lang="ca">
 <head>
@@ -11,73 +11,112 @@
     <div class="header">
         <h3>Header</h3>
     </div>
-    
-    <?php foreach ($_SESSION['errors_bag'] as $error) : ?>       
-        <div class="errors">
-            <span class="errors--error"> <?php echo $error; ?></span>
-        </div>
-    <?php endforeach?>
 
     <div class="container">
         <h1>Formulari crear pel·lícula</h1>
-        <form name="formulari" method="post" action="/store/movie">
+        <form id="form" name="formulari" method="post" action="/store/movie">
             <div class="form-part">
                 <label for="titol">Títol</label>
-                <input type="text" name="titol" required>
+                <input id="titol" type="text" name="titol" required>
             </div>
             <div class="form-part">
                 <label for="resum">Resum</label>
-                <input type="text" name="resum" required></input>
+                <input id="resum" type="text" name="resum" required></input>
             </div>
             <div class="form-part">
                 <label for="portada">Ruta portada</label>
-                <input type="text" name="portada" required>
+                <input id="portada" type="text" name="portada" required>
             </div>
             <div class="form-part">
                 <label for="tags">Tags</label><br><br>
-                <select multiple name="tags[]" required size="10">
-                    <option value="Comedy">Comedy</option>
-                    <option value="History">History</option>
-                    <option value="Sci-Fi">Sci-Fi</option>
-                    <option value="Romance">Romance</option>
-                    <option value="Thriller">Thriller</option>
-                    <option value="Mystery">Mystery</option>
-                    <option value="Drama">Drama</option>
-                    <option value="Horror">Horror</option>
-                    <option value="War">War</option>
-                    <option value="Action">Action</option>
-                    <option value="Musical">Musical</option>
-                    <option value="Superhero">Superhero</option>
-                    <option value="Fantasy">Fantasy</option>
-                    <option value="Animation">Animation</option>
-                    <option value="Adventure">Adventure</option>
+                <select id="tags" multiple name="tags[]" required size="10">
+                <?php
+                $stmt = $connection->prepare("SELECT id, name FROM tags");
+                $stmt->execute();
+                $tags = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                ?>
+                <?php foreach($tags as $tag) : ?>
+                    <option value="<?php echo $tag["id"]?>"><?php echo $tag["name"]?></option>
+                <?php endforeach?> 
                 </select>
             </div>
             <div class="form-part">
                 <label for="director">Directors</label><br><br>
-                <select multiple name="directors[]" required size="10">
-                    <option value="Akira Kurosawa">Akira Kurosawa</option>
-                    <option value="Alfred Hitchcock">Alfred Hitchcockr</option>
-                    <option value="Christopher Nolan">Christopher Nolan</option>
-                    <option value="Clint Eastwood">Clint Eastwood</option>
-                    <option value="George Lucas">George Lucas</option>
-                    <option value="Hayao Miyazaki">Hayao Miyazaki</option>
-                    <option value="James Cameron">James Cameron</option>
-                    <option value="Ridley Scott">Ridley Scott</option>
-                    <option value="Tim Burton">Tim Burton</option>
-                    <option value="Zack Snyder">Zack Snyder</option>
+                <select id="director" multiple name="directors[]" required size="10">
+                <?php
+                $stmt = $connection->prepare("SELECT id, name FROM directors");
+                $stmt->execute();
+                $directors = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                ?>
+                <?php foreach($directors as $director) : ?>
+                    <option value="<?php echo $director["id"]?>"><?php echo $director["name"]?></option>
+                <?php endforeach?> 
                 </select>
             </div>
             <div class="form-part">
                 <label for="valoracio">Valoració 1 - 10</label>
-                <input type="number" name="valoracio" min="0" max="10" step="1" required>
+                <input id="valoracio" type="number" name="valoracio" min="0" max="10" step="1" required>
             </div>
             <button>Crear pel·lícula</button>
         </form>
     </div>
-
+    <div id="resposta"></div>
     <div class="footer">
         <h3>Footer</h3>
     </div>
+
+    <script>
+        document.getElementById('form').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            var textSeleccionat1 = document.getElementById('titol').value;
+            var textSeleccionat2 = document.getElementById('resum').value;
+            var textSeleccionat3 = document.getElementById('portada').value;
+
+            var valorsSeleccionats4 = [];
+            var opcionsSeleccionades4 = document.getElementById('tags').selectedOptions;
+            for (var i = 0; i < opcionsSeleccionades4.length; i++) {
+                valorsSeleccionats4.push(opcionsSeleccionades4[i].value);
+            }
+
+            var valorsSeleccionats5 = [];
+            var opcionsSeleccionades5 = document.getElementById('director').selectedOptions;
+            for (var i = 0; i < opcionsSeleccionades5.length; i++) {
+                valorsSeleccionats5.push(opcionsSeleccionades5[i].value);
+            }
+
+            var textSeleccionat6 = document.getElementById('valoracio').value;
+
+
+            var formData = {
+                titol: textSeleccionat1,
+                resum: textSeleccionat2,
+                portada: textSeleccionat3,
+                tags: valorsSeleccionats4,
+                director: valorsSeleccionats5,
+                valoracio: textSeleccionat6
+            };
+
+            fetch('http://imdb.test/store/movie', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formData)
+            })
+            .then(resposta => resposta.json())
+            .then(data => {
+                document.getElementById('resposta').innerHTML = '';
+                for (var camp in data.missatges) {
+                    var elementMissatge = document.createElement('p');
+                    elementMissatge.textContent = data.missatges[camp];
+                    if (data.isValid) {
+                        elementMissatge.style.color = 'green';
+                    } else {
+                        elementMissatge.style.color = 'red';
+                    }
+                    document.getElementById('resposta').appendChild(elementMissatge);
+                }
+            })
+        });
+    </script>
 </body>
 </html>
