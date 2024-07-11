@@ -1,8 +1,6 @@
 <?php
 
-require '../back/connection.php';
-
-require'../controllers/formulari.php';
+require 'connection.php';
 
 
 $stmt = $connection->prepare("set FOREIGN_KEY_CHECKS = 0; truncate movie_tag");
@@ -20,11 +18,13 @@ $stmt->execute();
 $stmt = $connection->prepare("truncate tags; set FOREIGN_KEY_CHECKS = 1");
 $stmt->execute();
 
-$jsonData = file_get_contents('directors.json');
+$jsonData = file_get_contents('back/directors.json');
 
 $directors = json_decode($jsonData, true);
 
 $stmt = $connection->prepare("INSERT INTO directors (name, birthdate) VALUES (?, ?)");
+
+$jsonData = file_get_contents('back/directors.json');
 
 
 
@@ -35,7 +35,7 @@ foreach ($directors as $director) {
 }
 
 
-$jsonData = file_get_contents('genres.json');
+$jsonData = file_get_contents('back/genres.json');
 
 $genres = json_decode($jsonData, true);
 
@@ -47,7 +47,7 @@ foreach ($genres as $tag) {
     $stmt->execute([$name]);
 }
 
-$jsonData = file_get_contents('movies.json');
+$jsonData = file_get_contents('back/movies.json');
 
 $movies = json_decode($jsonData, true);
 

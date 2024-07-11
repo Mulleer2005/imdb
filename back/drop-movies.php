@@ -32,12 +32,12 @@ $stmt = $connection->prepare("DELETE FROM movies WHERE id = ?");
 foreach($input['titol'] as $value){
     $stmt->execute([$value]);
 }
-$message = 'Tots els camps son vàlids.';
+$message = 'Pelicula esborrada correctament.';
 }
 
 $resposta = [
     'isValid' => $isValid,
-    'message' => $isValid ? 'Todos los elementos son cadenas válidas.' : $message
+    'message' => $message
 ];
 
 echo json_encode($resposta);

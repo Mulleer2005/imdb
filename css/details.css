@@ -104,11 +104,11 @@ body
 .information .information__details
 {
     width: 350px;
-    margin-right: 300px;
+    margin-right: 100px;
     padding-left: 15px;
 }
 
-.information .information__details h1
+.information .information__details h2
 {
     color:aqua;
     font-size: 70px;
@@ -202,7 +202,7 @@ body
     .information .information__details
     {
         padding-left: 50px;
-        width: 30%;
+        width: 80%;
     }
 
     .information
