@@ -1,19 +1,25 @@
 <?php
 
 $router->define([
-    'home' =>'controllers/home.php',
+
+    'home' =>'controllers/movies/home.php',
     'movies/detail' => 'controllers/movies/detail.php',
-    //'home/details-avatar' =>'controllers/details-avatar.php',
-    //'home/details-godzilla' =>'controllers/details-godzilla.php',
-    'home/formulari-crear' =>'controllers/formulari-insert.php',
-    'home/formulari-eliminar' =>'controllers/formulari-drop.php',
-    'home/formulari-modificar' =>'controllers/formulari-update.php',
-    'home/formulari-crear-tags' =>'controllers/formulari-insert-tags.php',
-    'home/formulari-crear-directors' =>'controllers/formulari-insert-directors.php',
+
+    'movies/create' => 'controllers/forms/movies/formulari-insert.php',
+    'movies/delete' => 'controllers/forms/movies/formulari-drop.php',
+    'movies/update' => 'controllers/forms/movies/formulari-update.php',
+
+    'tags/create' => 'controllers/forms/tags/formulari-insert-tags.php',
+
+    'directors/create' => 'controllers/forms/directors/formulari-insert-directors.php',
+
     'home/json' => 'back/insert-json.php',
-    'store/movie' => 'back/insert-movies.php',
-    'store/drop/movie' => 'back/drop-movies.php',
-    'store/update/movie' => 'back/update-movies.php',
-    'store/insert/tags' => 'back/insert-tags.php',
-    'store/insert/directors' => 'back/insert-directors.php',
+
+    'api/movies/store' => 'back/api/movies/insert-movies.php',
+    'api/movies/unstore' => 'back/api/movies/drop-movies.php',
+    'api/movies/modify' => 'back/api/movies/update-movies.php',
+
+    'api/tags/store' => 'back/api/tags/insert-tags.php',
+
+    'api/directors/store' => 'back/api/directors/insert-directors.php',
 ]);

@@ -97,7 +97,7 @@
                 valoracio: textSeleccionat6
             };
 
-            fetch('http://imdb.test/store/movie', {
+            fetch('http://imdb.test/api/movies/store', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(formData)

@@ -51,7 +51,7 @@
                 titol: valorsSeleccionats
             };
 
-            fetch('http://imdb.test/store/drop/movie', {
+            fetch('http://imdb.test/api/movies/unstore', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(formData)

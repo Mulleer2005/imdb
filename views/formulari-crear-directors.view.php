@@ -43,7 +43,7 @@
                 birthdate: birthdateValue,
             };
 
-            fetch('http://imdb.test/store/insert/directors', {
+            fetch('http://imdb.test/api/directors/store', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(formData)
