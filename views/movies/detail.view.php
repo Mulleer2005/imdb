@@ -87,15 +87,7 @@
     </div>
 
 </body>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/tiny-slider/2.9.2/min/tiny-slider.js">
-</script>
-<script src="../JavaScript/details.js"></script>
-<script src="../JavaScript/footer.js"></script>
 
+<script src="../dist/detail.js" defer></script>
 
-<script src="../JavaScript/lightgallery.min.js"></script>
-<script type="text/javascript">
-    lightGallery(document.getElementById('lightgallery'), {
-    });
-</script>
 </html>
