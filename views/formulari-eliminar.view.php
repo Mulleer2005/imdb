@@ -1,4 +1,3 @@
-<?php require 'back/connection.php'; ?>
 <!DOCTYPE html>
 <html lang="ca">
 <head>
@@ -18,11 +17,6 @@
             <div class="form-part">
                 <label for="titol">Títol</label><br><br>
                 <select id= "titol" multiple name="id[]" required size="5">
-                <?php
-                $stmt = $connection->prepare("SELECT id, title FROM movies");
-                $stmt->execute();
-                $movies = $stmt->fetchAll(PDO::FETCH_ASSOC);
-                ?>
                 <?php foreach($movies as $movie) : ?>
                     <option value="<?php echo $movie["id"]?>"><?php echo $movie["title"]?></option>
                 <?php endforeach?> 

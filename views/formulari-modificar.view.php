@@ -1,4 +1,3 @@
-<?php require 'back/connection.php'; ?>
 <!DOCTYPE html>
 <html lang="ca">
 <head>
@@ -18,13 +17,6 @@
         <div class="form-part">
                 <label for="titolAntic">Pel·lícula a modificar</label><br><br>
                 <select id="titolAntic" name="id" size="5">
-                <?php
-                require 'back/connection.php';
-
-                $stmt = $connection->prepare("SELECT id, title FROM movies");
-                $stmt->execute();
-                $movies = $stmt->fetchAll(PDO::FETCH_ASSOC);
-                ?>
                 <?php foreach($movies as $movie) : ?>
                     <option value="<?php echo $movie["id"]?>"><?php echo $movie["title"]?></option>
                 <?php endforeach?> 
@@ -45,11 +37,7 @@
             <div class="form-part">
                 <label for="tags">Nous tags</label><br><br>
                 <select id="tags" multiple name="tagsIDs[]" size="10">
-                <?php
-                $stmt = $connection->prepare("SELECT id, name FROM tags");
-                $stmt->execute();
-                $tags = $stmt->fetchAll(PDO::FETCH_ASSOC);
-                ?>
+
                 <?php foreach($tags as $tag) : ?>
                     <option value="<?php echo $tag["id"]?>"><?php echo $tag["name"]?></option>
                 <?php endforeach?> 
@@ -58,11 +46,6 @@
             <div class="form-part">
                 <label for="director">Nous directors</label><br><br>
                 <select id="director" multiple name="directorsIDs[]" size="8">
-                <?php
-                $stmt = $connection->prepare("SELECT id, name FROM directors");
-                $stmt->execute();
-                $directors = $stmt->fetchAll(PDO::FETCH_ASSOC);
-                ?>
                 <?php foreach($directors as $director) : ?>
                     <option value="<?php echo $director["id"]?>"><?php echo $director["name"]?></option>
                 <?php endforeach?> 

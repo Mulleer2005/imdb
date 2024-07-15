@@ -30,11 +30,7 @@
             <div class="form-part">
                 <label for="tags">Tags</label><br><br>
                 <select id="tags" multiple name="tags[]" required size="10">
-                <?php
-                $stmt = $connection->prepare("SELECT id, name FROM tags");
-                $stmt->execute();
-                $tags = $stmt->fetchAll(PDO::FETCH_ASSOC);
-                ?>
+
                 <?php foreach($tags as $tag) : ?>
                     <option value="<?php echo $tag["id"]?>"><?php echo $tag["name"]?></option>
                 <?php endforeach?> 
@@ -43,11 +39,7 @@
             <div class="form-part">
                 <label for="director">Directors</label><br><br>
                 <select id="director" multiple name="directors[]" required size="10">
-                <?php
-                $stmt = $connection->prepare("SELECT id, name FROM directors");
-                $stmt->execute();
-                $directors = $stmt->fetchAll(PDO::FETCH_ASSOC);
-                ?>
+
                 <?php foreach($directors as $director) : ?>
                     <option value="<?php echo $director["id"]?>"><?php echo $director["name"]?></option>
                 <?php endforeach?> 
