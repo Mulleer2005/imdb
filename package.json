@@ -1,0 +1,20 @@
+{
+  "name": "imdb",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "lightgallery.js": "^1.4.0",
+    "tiny-slider": "^2.9.0"
+  },
+  "devDependencies": {
+    "vite": "^5.3.3"
+  }
+}

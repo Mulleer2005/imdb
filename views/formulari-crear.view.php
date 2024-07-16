@@ -1,4 +1,3 @@
-<?php require 'back/connection.php'; ?>
 <!DOCTYPE html>
 <html lang="ca">
 <head>
@@ -30,11 +29,7 @@
             <div class="form-part">
                 <label for="tags">Tags</label><br><br>
                 <select id="tags" multiple name="tags[]" required size="10">
-                <?php
-                $stmt = $connection->prepare("SELECT id, name FROM tags");
-                $stmt->execute();
-                $tags = $stmt->fetchAll(PDO::FETCH_ASSOC);
-                ?>
+
                 <?php foreach($tags as $tag) : ?>
                     <option value="<?php echo $tag["id"]?>"><?php echo $tag["name"]?></option>
                 <?php endforeach?> 
@@ -43,11 +38,7 @@
             <div class="form-part">
                 <label for="director">Directors</label><br><br>
                 <select id="director" multiple name="directors[]" required size="10">
-                <?php
-                $stmt = $connection->prepare("SELECT id, name FROM directors");
-                $stmt->execute();
-                $directors = $stmt->fetchAll(PDO::FETCH_ASSOC);
-                ?>
+
                 <?php foreach($directors as $director) : ?>
                     <option value="<?php echo $director["id"]?>"><?php echo $director["name"]?></option>
                 <?php endforeach?> 
@@ -65,58 +56,9 @@
         <h3>Footer</h3>
     </div>
 
-    <script>
-        document.getElementById('form').addEventListener('submit', function(event) {
-            event.preventDefault();
-
-            var textSeleccionat1 = document.getElementById('titol').value;
-            var textSeleccionat2 = document.getElementById('resum').value;
-            var textSeleccionat3 = document.getElementById('portada').value;
-
-            var valorsSeleccionats4 = [];
-            var opcionsSeleccionades4 = document.getElementById('tags').selectedOptions;
-            for (var i = 0; i < opcionsSeleccionades4.length; i++) {
-                valorsSeleccionats4.push(opcionsSeleccionades4[i].value);
-            }
-
-            var valorsSeleccionats5 = [];
-            var opcionsSeleccionades5 = document.getElementById('director').selectedOptions;
-            for (var i = 0; i < opcionsSeleccionades5.length; i++) {
-                valorsSeleccionats5.push(opcionsSeleccionades5[i].value);
-            }
-
-            var textSeleccionat6 = document.getElementById('valoracio').value;
+    <script src="../dist/formulari-crear.js" defer></script>
 
 
-            var formData = {
-                titol: textSeleccionat1,
-                resum: textSeleccionat2,
-                portada: textSeleccionat3,
-                tags: valorsSeleccionats4,
-                director: valorsSeleccionats5,
-                valoracio: textSeleccionat6
-            };
 
-            fetch('http://imdb.test/api/movies/store', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(formData)
-            })
-            .then(resposta => resposta.json())
-            .then(data => {
-                document.getElementById('resposta').innerHTML = '';
-                for (var camp in data.missatges) {
-                    var elementMissatge = document.createElement('p');
-                    elementMissatge.textContent = data.missatges[camp];
-                    if (data.isValid) {
-                        elementMissatge.style.color = 'green';
-                    } else {
-                        elementMissatge.style.color = 'red';
-                    }
-                    document.getElementById('resposta').appendChild(elementMissatge);
-                }
-            })
-        });
-    </script>
 </body>
 </html>
