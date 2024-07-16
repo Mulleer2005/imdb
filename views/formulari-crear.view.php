@@ -1,4 +1,3 @@
-<?php require 'back/connection.php'; ?>
 <!DOCTYPE html>
 <html lang="ca">
 <head>

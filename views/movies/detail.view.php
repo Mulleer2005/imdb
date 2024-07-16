@@ -56,6 +56,12 @@
         </div>
     </div>
 
+    <button id="ButtonQR">Generar codi QR</button>
+
+    <div class="inactive" id="popupDiv">
+        <img id="popupImage" src="">
+    </div>
+
     <div id="lightgallery">
         <a href="../details-img/avatar5.jpeg" data-lg-size="1024-800">
             <img alt="img1" src="../details-img/avatar5.jpeg" />
@@ -85,6 +91,8 @@
     <div class="footer">
         <h3>Footer</h3>
     </div>
+
+    <?php $movieId = $_GET['movie_id']; ?>
 
 </body>
 
