@@ -26,10 +26,11 @@ if($isValid){
 }
 
 $resposta = [
-    'isValid' => $isValid,
+    'response' => $isValid,
     'missatges' => $missatges
 ];
 
-echo json_encode($resposta);
+return json_encode($resposta);
+
 
 ?>
