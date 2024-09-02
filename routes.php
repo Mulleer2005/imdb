@@ -22,4 +22,6 @@ $router->define([
     'api/tags/store' => 'back/api/tags/insert-tags.php',
 
     'api/directors/store' => 'back/api/directors/insert-directors.php',
+    'movies/detailqr' => 'back/detail-qr.php',
+
 ]);
